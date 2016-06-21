@@ -1,0 +1,31 @@
+#! /bin/bash
+
+COMMAND="$1"
+ARG="$2"
+
+if [[ $COMMAND == "extern" ]]; then
+    if [[ $ARG == "con" ]]; then
+        echo "setting up external display..."
+        modprobe bbswitch 
+        optirun true 
+        intel-virtual-output
+    elif [[ $ARG=="discon" ]]; then
+        echo "removing external display..."
+        PID=$(ps ax | grep Xorg | awk '{print $1}')
+        if [ ! -z $PID ]; then
+            echo "killing bumblebee process ($PID)"
+            sudo kill -15 $PID
+        fi
+        if lsmod | grep -q nvidia; then
+            echo "shutting off nvidia"
+            sudo rmmod nvidia
+        fi
+        sudo tee /proc/acpi/bbswitch <<<OFF
+        #sudo augtool --noload --file /etc/bumblebee/dual-monitor/disable.aug
+        sudo service bumblebeed restart
+    fi
+elif [[ $COMMAND == "resetmain" ]]; then
+    xrandr --output LVDS1 --mode 1980x1080
+else
+    echo "USAGE: disputil [extern | resetmain] [ | con | discon]"
+fi

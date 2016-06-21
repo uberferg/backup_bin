@@ -1,0 +1,17 @@
+#! /bin/bash
+
+WORD="$1"
+
+if [[ -z $WORD ]]; then
+    echo "missing required argument: word to look up"
+
+else
+    MP3=".mp3"
+    WORD="$WORD$MP3"
+
+    echo $WORD
+
+    cd ~/Downloads
+    wget ssl.gstatic.com/dictionary/static/sounds/de/0/$WORD
+    cd -
+fi

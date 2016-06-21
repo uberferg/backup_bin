@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# purge dumb preinstalled crap
+sudo apt purge aisleriot evolution evolution-common evolution-data-server-online-accounts evolution-plugins gnome-mahjongg gnome-mines gnome-sudoku rhythmbox rhythmbox-data rhythmbox-plugins rhythmbox-plugin-magnatune rhythmbox-mozilla rhythmbox-plugin-cdrecorder rhythmbox-plugin-zeitgeist totem totem-plugins 
+sudo apt-get autoremove
+
+# create temp folder to DL new program files
+mkdir temp_install_folder
+cd temp_install_folder
+
+# Anki
+wget http://ankisrs.net/download/mirror/anki-2.0.32.deb
+
+# Google Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+# Spotify
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D2C19886
+echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+# handle Spotify launch error on Ubuntu 15.04
+wget http://security.ubuntu.com/ubuntu/pool/main/libg/libgcrypt11/libgcrypt11_1.5.4-2ubuntu1.1_amd64.deb
+
+# perform installations
+sudo apt update
+sudo dpkg -i anki-2.0.32.deb google-chrome-stable_current_amd64.deb libgcrypt11_1.5.4-2ubuntu1.1_amd64.deb
+sudo apt install -f
+sudo apt install git ipython3 pavucontrol spotify-client terminator texlive-full tmux vim vlc
+
+# clean up
+cd ..
+rm -r temp_install_folder
